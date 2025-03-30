@@ -2,14 +2,12 @@ package service
 
 import (
 	"context"
+	"flatSellerAvito2024/config"
 	"flatSellerAvito2024/internal/models"
 	"flatSellerAvito2024/internal/service/flatService"
 	"flatSellerAvito2024/internal/service/houseService"
 	"flatSellerAvito2024/internal/service/userService"
 	"flatSellerAvito2024/internal/storage"
-	"net/http"
-
-	"github.com/gorilla/sessions"
 )
 
 type House interface {
@@ -28,16 +26,15 @@ type Flat interface {
 type User interface {
 	Register(ctx context.Context, user *models.User) error
 
-	/*
-		Big kludge in functions below.
-		ResponseWriter and request in service layer
-	*/
-	Login(ctx context.Context, userData *models.User, w http.ResponseWriter, r *http.Request) error
+	Login(ctx context.Context, userData *models.User) (*models.Tokens, error)
+	Logout(ctx context.Context, tokens *models.Tokens) error
+	UserIsLogin(ctx context.Context, tokens *models.Tokens) (*models.Tokens, error)
+	AvaliableForUser(ctx context.Context, tokens *models.Tokens) (bool, error)
 }
 
 type Deps struct {
-	Repos         *storage.Repositories
-	SessionsStore *sessions.CookieStore
+	Repos *storage.Repositories
+	Cfg   *config.Config
 }
 
 type Services struct {
@@ -49,7 +46,7 @@ type Services struct {
 func NewServices(deps *Deps) *Services {
 	Flat := flatService.NewFlatService(deps.Repos.Flat, deps.Repos.House, deps.Repos.TxManager)
 	House := houseService.NewHouseService(deps.Repos.House)
-	User := userService.NewUserService(deps.Repos.User, deps.SessionsStore)
+	User := userService.NewUserService(deps.Repos.User, deps.Cfg)
 
 	return &Services{
 		Flat:  Flat,

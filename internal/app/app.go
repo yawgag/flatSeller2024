@@ -35,8 +35,8 @@ func Run() {
 
 	repos := storage.NewRepositories(dbConnPool)
 	services := service.NewServices(&service.Deps{
-		Repos:         repos,
-		SessionsStore: sessionsStore,
+		Repos: repos,
+		Cfg:   cfg,
 	})
 
 	handler := transport.NewHandler(services)

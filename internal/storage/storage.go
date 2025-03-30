@@ -7,6 +7,7 @@ import (
 	"flatSellerAvito2024/internal/storage/postgres/houseRepo"
 	"flatSellerAvito2024/internal/storage/postgres/transactionManager"
 	"flatSellerAvito2024/internal/storage/postgres/userRepo"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -30,7 +31,12 @@ type Flat interface {
 
 type User interface {
 	Register(ctx context.Context, user *models.User) error
-	FindUserByLogin(ctx context.Context, login string) (*models.User, error)
+	// FindUserByLogin(ctx context.Context, login string) (*models.User, error)
+	GetUser(ctx context.Context, login string) (*models.User, error)
+	CreateSession(ctx context.Context, user *models.User, sessionId string) (time.Time, error)
+	GetSession(ctx context.Context, sessionId string) (*models.Session, error)
+	DeleteSession(ctx context.Context, sessionId string) error
+	UpdateSessionExpireTime(ctx context.Context, sessionId string) (time.Time, error)
 }
 
 type TransactionManager interface {

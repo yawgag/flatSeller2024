@@ -126,11 +126,13 @@ func (h *userHandler) LoginCheckMiddleware(next http.Handler) http.Handler {
 		accessTokenCookie, err := r.Cookie("accessToken")
 		if err != nil {
 			fmt.Println("need to login")
+			http.Error(w, "unauthorized", http.StatusForbidden)
 			return
 		}
 		refreshTokenCookie, err := r.Cookie("refreshToken")
 		if err != nil {
 			fmt.Println(err)
+			http.Error(w, "unauthorized", http.StatusForbidden)
 			return
 		}
 
@@ -142,6 +144,7 @@ func (h *userHandler) LoginCheckMiddleware(next http.Handler) http.Handler {
 		tokens, err = h.userService.UserIsLogin(r.Context(), tokens)
 		if err != nil {
 			fmt.Println(err)
+			http.Error(w, "unauthorized", http.StatusForbidden)
 			return
 		}
 
@@ -176,6 +179,7 @@ func (h *userHandler) RoleCheckMiddleware(next http.Handler) http.Handler {
 		accessTokenCookie, err := r.Cookie("accessToken")
 		if err != nil {
 			fmt.Println("need to login")
+			http.Error(w, "unauthorized", http.StatusForbidden)
 			return
 		}
 		tokens := &models.Tokens{
@@ -185,11 +189,14 @@ func (h *userHandler) RoleCheckMiddleware(next http.Handler) http.Handler {
 		avaliable, err := h.userService.AvaliableForUser(r.Context(), tokens)
 		if err != nil {
 			fmt.Println(err)
+			http.Error(w, "Forbidden", http.StatusForbidden)
 			return
 		}
 
 		if avaliable {
 			next.ServeHTTP(w, r)
+		} else {
+			http.Error(w, "Forbidden", http.StatusForbidden)
 		}
 
 	})

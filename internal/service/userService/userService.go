@@ -63,7 +63,7 @@ func (s *UserService) Login(ctx context.Context, userData *models.User) (*models
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"userId":     user.Id,
 		"userRole":   user.UserRole,
-		"expireTime": time.Now().Add(time.Second * 30), // changeTIME
+		"expireTime": time.Now().Add(time.Minute * 15),
 	})
 
 	signedAccessToken, err := accessToken.SignedString([]byte(s.cfg.SecretWord))

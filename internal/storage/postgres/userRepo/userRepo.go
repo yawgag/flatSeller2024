@@ -21,23 +21,6 @@ func NewUserRepository(pool *pgxpool.Pool) *UserRepository {
 	}
 }
 
-// func (r *UserRepository) FindUserByLogin(ctx context.Context, login string) (*models.User, error) {
-// 	queryCheckLogin := `select login, password, userRole
-// 						from users
-// 						where login = $1`
-
-// 	user := &models.User{}
-
-// 	err := r.pool.QueryRow(ctx, queryCheckLogin, login).Scan(&user.Login, &user.PasswordHash, &user.UserRole)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return nil, err
-// 	}
-
-// 	return user, nil
-
-// }
-
 func (r *UserRepository) GetUser(ctx context.Context, login string) (*models.User, error) {
 	query := `select id, login, password, userRole
 				from users

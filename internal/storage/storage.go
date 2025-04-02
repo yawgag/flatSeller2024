@@ -31,7 +31,6 @@ type Flat interface {
 
 type User interface {
 	Register(ctx context.Context, user *models.User) error
-	// FindUserByLogin(ctx context.Context, login string) (*models.User, error)
 	GetUser(ctx context.Context, login string) (*models.User, error)
 	CreateSession(ctx context.Context, user *models.User, sessionId string) (time.Time, error)
 	GetSession(ctx context.Context, sessionId string) (*models.Session, error)

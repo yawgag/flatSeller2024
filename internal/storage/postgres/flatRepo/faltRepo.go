@@ -59,9 +59,6 @@ func (r *FlatRepository) FlatInfo(ctx context.Context, id int) (*models.Flat, er
 }
 
 func (r *FlatRepository) IsExist(ctx context.Context, id int) (bool, error) {
-	/*
-		rewrite on "exist" in postgres query
-	*/
 	query := `select exists(select *
 				from flats
 				where id = $1)`
@@ -74,36 +71,3 @@ func (r *FlatRepository) IsExist(ctx context.Context, id int) (bool, error) {
 	}
 	return exist, nil
 }
-
-// func (r *FlatRepository) UpdateWithTx(ctx context.Context, tx pgx.Tx, flat *models.Flat) error {
-// 	queryNumberInHouse := `select exsists(select *
-// 							from flats
-// 							where houseid = $1 and flatnumber = $2)`
-
-// 	queryUpdate := `update into flats
-// 				where id = $1
-// 				set houseId = $2,
-// 					price = $3,
-// 					roomsnumber = $4,
-// 					flatnumber = $5,
-// 					moderationstatus = $6`
-
-// 	var flatIsExist bool
-// 	err := tx.QueryRow(ctx, queryNumberInHouse, flat.HouseId, flat.FlatNumber).Scan(&flatIsExist)
-// 	if err != nil {
-// 		fmt.Println("Something went wrong in database. Id 5", err)
-// 		return err
-// 	}
-
-// 	if flatIsExist {
-// 		return errors.New("flat is already exist in this house")
-// 	}
-
-// 	_, err = r.pool.Exec(ctx, queryUpdate, flat.Id, flat.HouseId, flat.Price, flat.RoomsNumber, flat.FlatNumber, flat.ModerationStatus)
-// 	if err != nil {
-// 		fmt.Println("Something went wrong in database. Id 6", err)
-// 		return err
-// 	}
-// 	return nil
-
-// }

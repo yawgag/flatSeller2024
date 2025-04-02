@@ -60,9 +60,6 @@ func (r *HouseRepository) ChangeLastFlatAddedDateWithTx(ctx context.Context, tx 
 }
 
 func (r *HouseRepository) IsExist(ctx context.Context, id int) (bool, error) {
-	/*
-		rewrite on "exist" in postgres query
-	*/
 	query := `select exists(select *
 				from houses
 				where id = $1)`
